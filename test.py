@@ -1,4 +1,5 @@
-i = 2
+# i = 2
+#
+# print('//*[@id=\"pagerTagAnchor'+str(i)+'\"]')
+# print('// *[ @ id = "pagerTagAnchor2"]')
 
-print('//*[@id=\"pagerTagAnchor'+str(i)+'\"]')
-print('// *[ @ id = "pagerTagAnchor2"]')
