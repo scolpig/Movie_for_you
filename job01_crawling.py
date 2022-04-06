@@ -24,68 +24,53 @@ option.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
 driver = webdriver.Chrome('./chromedriver', options = option)
 driver.implicitly_wait(10)
 
-url = f'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page=1'  # 페이지
-driver.get(url)  # url앞의 url 받기
-time.sleep(0.01)
-#li는 20까지 한 페이지에 20개의 li
-#각각의 영화 들어가기
-
-#일단은 첫 페이지
 title_list = []
 reviews_list = []
 df_data = pd.DataFrame()
-for l in range(1,4):
-    driver.get(url)
-    driver.find_element_by_xpath(f'// *[ @ id = "old_content"] / ul / li[{l}] / a').click()
-    #리뷰는 li[6]
-    driver.find_element_by_xpath('//*[@id="movieEndTabMenu"]/li[6]/a').click()
+#영화 리스트 페이지
+for p in range(1, 3):
+    url = f'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page={p}'  # 페이지
+    driver.get(url)  # url앞의 url 받기
+    time.sleep(0.01)
+#li는 20까지 한 페이지에 20개의 li
+#각각의 영화 들어가기
+#첫 페이지에 영화는 //*[@id="old_content"]/ul/li[20]/a 20개
+    for l in range(1,21):
+        driver.get(url)
+        driver.find_element_by_xpath(f'// *[ @ id = "old_content"] / ul / li[{l}] / a').click()
+        #리뷰는 li[6]
+        driver.find_element_by_xpath('//*[@id="movieEndTabMenu"]/li[6]/a').click()
 
-    #리뷰는 리뷰탭에서 한 페이지에 10개씩
-    # for rp in range(1, 3):
-    #     https: // movie.naver.com / movie / bi / mi / review.naver?code = 193794 & page = 2
-    for rp in range(1,3):
-        try:
-            driver.find_element_by_xpath('//*[@id=\"pagerTagAnchor' + str(rp) + '\"]').click()
-            for r in range(1,11):
-                try:
-                    driver.find_element_by_xpath(f'//*[@id="reviewTab"]/div/div/ul/li[{r}]/a').click()
-                    time.sleep(0.1)
-                    title = driver.find_element_by_xpath('//*[@id="content"]/div[1]/div[2]/div[1]/h3').text
-                    # title = re.compile('[^가-힣a-zA-Z ]').sub(' ', title)
-                    reviews = driver.find_element_by_xpath('//*[@id="content"]/div[1]/div[4]/div[1]/div[4]').text
-                    # reviews = re.compile('[^가-힣a-zA-Z ]').sub(' ', reviews)
-                    title_list.append(title)
-                    reviews_list.append(reviews)
-                    driver.find_element_by_xpath('//*[@id="movieEndTabMenu"]/li[6]/a').click()
-                except NoSuchElementException:
-                    print('NoSuchElementException')
-                    break
-        except NoSuchElementException:
-            print('NoSuchElementException')
-            break
+        #리뷰는 리뷰탭에서 한 페이지에 10개씩 60개면 range(1,7)
+        for rp in range(1,7):
+            try:
+                driver.find_element_by_xpath('//*[@id=\"pagerTagAnchor' + str(rp) + '\"]').click()
+                #2페이지로 넘어와서
+                for r in range(1,11):
+                    try:
+                        driver.find_element_by_xpath(f'//*[@id="reviewTab"]/div/div/ul/li[{r}]/a').click()
+                        time.sleep(0.1)
+                        title = driver.find_element_by_xpath('//*[@id="content"]/div[1]/div[2]/div[1]/h3').text
+                        # title = re.compile('[^가-힣a-zA-Z ]').sub(' ', title)
+                        reviews = driver.find_element_by_xpath('//*[@id="content"]/div[1]/div[4]/div[1]/div[4]').text
+                        # reviews = re.compile('[^가-힣a-zA-Z ]').sub(' ', reviews)
+                        title_list.append(title)
+                        reviews_list.append(reviews)
+                        driver.back()
+                    except NoSuchElementException:
+                        print('NoSuchElementException')
+                        break
+            except NoSuchElementException:
+                print('NoSuchElementException')
+                break
 df_title = pd.DataFrame(title_list, columns=['title'])  # 리스트를 dataFrame화
 df_reviews = pd.DataFrame(reviews_list, columns=['reviews'])  # 리스트를 dataFrame화
 df_data = pd.concat([df_data, df_title, df_reviews],
                                 axis='columns', ignore_index=True)  # 만든 dataFrame 합치기, axis='columns'->옆으로 합치기
 df_data.to_csv('./crawling_data/reviews_{}.csv'.format('2022'), index=False)  # index=False-> 만든 csv에 index 제거
 
-# df_data = pd.DataFrame()
 
-print(title_list)
-print(reviews_list)
 driver.close()
-# print('내용 : ',reviews)
-#//*[@id="content"]/div[1]/div[2]/div[1]/h3/a
-# //*[@id="content"]/div[1]/div[2]/div[1]/h3
-# //*[@id="reviewTab"]/div/div/ul/li[1]
-# //*[@id="reviewTab"]/div/div/ul/li[2]
-#
-# //*[@id="reviewTab"]/div/div/ul/li[1]/a
-# //*[@id="reviewTab"]/div/div/ul/li[10]
-# //*[@id="old_content"]/ul/li[2]/a
-#
-#
-# //*[@id="old_content"]/ul/li[8]/a
-# //*[@id="old_content"]/ul/li[20]/a
+
 
 
