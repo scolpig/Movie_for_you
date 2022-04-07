@@ -94,9 +94,9 @@ for i in range(1, 14):
                                 try:
                                     title = driver.find_element_by_xpath(title_xpath).text
                                     title = title.replace(',', ' ')
-                                    titles.append(title)
                                     review = driver.find_element_by_xpath(review_xpath).text
                                     review = review.replace(',', ' ')
+                                    titles.append(title)
                                     reviews.append(review)
                                     try:
                                         driver.back()  # 리뷰 페이지로
