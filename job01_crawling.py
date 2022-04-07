@@ -11,4 +11,72 @@
 
 
 
+from selenium import webdriver
+import pandas as pd
+import time
+
+option = webdriver.ChromeOptions()
+#options.add_argument('headless')
+option.add_argument('lang=ko_KR')
+option.add_argument('--no-sandbox')
+option.add_argument('--disable-dev-shm-usage')
+option.add_argument('disable-gpu')
+driver = webdriver.Chrome('./chromedriver', options=option)
+driver.implicitly_wait(10)
+
+# https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page=1 첫 페이지
+# //*[@id="old_content"]/ul/li[1]/a 영화 제목 1
+# //*[@id="old_content"]/ul/li[2]/a 영화 제목 2
+# //*[@id="old_content"]/ul/li[20]/a 영화 제목 20
+
+# //*[@id="movieEndTabMenu"]/li[6]/a/em 리뷰 버튼
+# //*[@id="old_content"]/div[3]/table/tbody/tr/td[2]/a 영화 페이지 버튼
+# https://movie.naver.com/movie/bi/mi/review.naver?code=193794&page=2   리뷰 페이지 url
+
+# //*[@id="reviewTab"]/div/div/ul/li[1]/a/strong 리뷰 제목 1
+# //*[@id="reviewTab"]/div/div/ul/li[2]/a/strong 리뷰 제목 1
+
+# //*[@id="content"]/div[1]/div[2]/div[1]/h3/a 영화 제목
+# //*[@id="content"]/div[1]/div[4]/div[1]/div[4]리뷰
+movie_page_url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page={}'
+movie_title_xpath = '//*[@id="old_content"]/ul/li[{}]/a'
+review_page_url = 'https://movie.naver.com/movie/bi/mi/review.naver?code=193794&page={}'
+review_tab_xpath = '//*[@id="movieEndTabMenu"]/li[{}]/a/em'
+review_title_xpath = '//*[@id="reviewTab"]/div/div/ul/li[{}]/a/strong'
+title_xpath = '//*[@id="content"]/div[1]/div[2]/div[1]/h3/a'
+review_xpath = '//*[@id="content"]/div[1]/div[4]/div[1]/div[4]'
+titles = []
+reviews = []
+for i in range(1, 14):
+    url = movie_page_url.format(i)
+    driver.get(url)
+    for j in range(1, 21):
+        driver.find_element_by_xpath(movie_title_xpath.format(j)).click() # 영화 제목 클릭
+        for k in range(6, 0, -1):
+            if driver.find_element_by_xpath(review_tab_xpath.format(k)).text == '리뷰':
+                driver.find_element_by_xpath(review_tab_xpath.format(k)).click() # 리뷰 버튼 클릭
+                break
+        for l in range(1, 7):
+            driver.get(review_page_url.format(l))
+            for k in range(1, 11):
+                driver.find_element_by_xpath(review_title_xpath.format(k)).click() # 리뷰 제목 클릭
+                title = driver.find_element_by_xpath(title_xpath).text
+                title = title.replace(',', ' ')
+                titles.append(title)
+                review = driver.find_element_by_xpath(review_xpath).text
+                review = review.replace(',', ' ')
+                reviews.append(review)
+                driver.back() # 리뷰 페이지로
+        driver.back()
+        driver.back()
+
+
+
+
+
+
+
+
+
+
 
