@@ -48,27 +48,57 @@ review_xpath = '//*[@id="content"]/div[1]/div[4]/div[1]/div[4]'
 titles = []
 reviews = []
 for i in range(1, 14):
-    url = movie_page_url.format(i)
-    driver.get(url)
+    url = movie_page_url.format(i) # 영화 페이지
     for j in range(1, 21):
-        driver.find_element_by_xpath(movie_title_xpath.format(j)).click() # 영화 제목 클릭
-        for k in range(6, 0, -1):
-            if driver.find_element_by_xpath(review_tab_xpath.format(k)).text == '리뷰':
-                driver.find_element_by_xpath(review_tab_xpath.format(k)).click() # 리뷰 버튼 클릭
-                break
-        for l in range(1, 7):
-            driver.get(review_page_url.format(l))
-            for k in range(1, 11):
-                driver.find_element_by_xpath(review_title_xpath.format(k)).click() # 리뷰 제목 클릭
-                title = driver.find_element_by_xpath(title_xpath).text
-                title = title.replace(',', ' ')
-                titles.append(title)
-                review = driver.find_element_by_xpath(review_xpath).text
-                review = review.replace(',', ' ')
-                reviews.append(review)
-                driver.back() # 리뷰 페이지로
-        driver.back()
-        driver.back()
+        try:
+            driver.get(url)
+            time.sleep(0.2)
+            try:
+                driver.find_element_by_xpath(movie_title_xpath.format(j)).click() # 영화 제목 클릭
+                time.sleep(0.2)
+                for k in range(6, 0, -1):
+                    if driver.find_element_by_xpath(review_tab_xpath.format(k)).text == '리뷰':
+                        driver.find_element_by_xpath(review_tab_xpath.format(k)).click() # 리뷰 버튼 클릭
+                        time.sleep(0.2)
+                        break
+                for l in range(1, 7):
+                    try:
+                        driver.get(review_page_url.format(l))
+                        time.sleep(0.2)
+                        for k in range(1, 11):
+                            try:
+                                driver.find_element_by_xpath(review_title_xpath.format(k)).click() # 리뷰 제목 클릭
+                                time.sleep(0.2)
+                                try:
+                                    title = driver.find_element_by_xpath(title_xpath).text
+                                    title = title.replace(',', ' ')
+                                    titles.append(title)
+                                    review = driver.find_element_by_xpath(review_xpath).text
+                                    review = review.replace(',', ' ')
+                                    reviews.append(review)
+                                    try:
+                                        driver.back()  # 리뷰 페이지로
+                                        time.sleep(0.2)
+                                    except:
+                                        driver.get(review_page_url.format(l))
+                                        time.sleep(0.2)
+                                except:
+                                    try:
+                                        driver.back()  # 리뷰 페이지로
+                                        time.sleep(0.2)
+                                    except:
+                                        driver.get(review_page_url.format(l))
+                                        time.sleep(0.2)
+
+                            except:
+                                print('{}페이지 {}번째 영화 리뷰 {}페이지 {}번째 리뷰 error'.format(i, j, l, k))
+                    except:
+                        print('{}페이지 {}번째 영화 리뷰 {}페이지 error'.format(i, j, l))
+            except:
+                print('{}페이지 {}번째 영화 error'.format(i, j))
+        except:
+            print('{}page error'.format(i))
+
 
 
 
