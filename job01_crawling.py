@@ -54,6 +54,10 @@ for i in range(1, 14):
     url = movie_page_url.format(i) # 영화 페이지
     for j in range(1, 21):
         try:
+            try:
+                driver.close()
+            except:
+                pass
             driver = webdriver.Chrome('./chromedriver', options=option)
             driver.implicitly_wait(1)
             print(url)
@@ -118,12 +122,13 @@ for i in range(1, 14):
                         break
             except:
                 print('{}페이지 {}번째 영화 error'.format(i, j))
+
         except:
             print('{}page error'.format(i))
     df = pd.DataFrame({'title':titles, 'reviews':reviews})
     print(df.tail())
     df.to_csv('./crawling_data/reviews_{}.csv'.format(2022), index=False)
-
+driver.close()
 
 
 
