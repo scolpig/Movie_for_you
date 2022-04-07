@@ -49,11 +49,16 @@ title_xpath = '//*[@id="content"]/div[1]/div[2]/div[1]/h3/a'
 review_xpath = '//*[@id="content"]/div[1]/div[4]/div[1]/div[4]'
 titles = []
 reviews = []
+
 for i in range(1, 14):
     url = movie_page_url.format(i) # 영화 페이지
     for j in range(1, 21):
         try:
+            driver = webdriver.Chrome('./chromedriver', options=option)
+            driver.implicitly_wait(1)
+            print(url)
             driver.get(url)
+            print('debug10')
             time.sleep(0.2)
             try:
                 print('j :', j)
@@ -105,7 +110,8 @@ for i in range(1, 14):
 
                             except:
                                 print('{}페이지 {}번째 영화 리뷰 {}페이지 {}번째 리뷰 error'.format(i, j, l, k))
-                                break
+                                driver.back()
+                                continue
                     except:
                         print('{}페이지 {}번째 영화 리뷰 {}페이지 error'.format(i, j, l))
                         #driver.get(url)
