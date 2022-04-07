@@ -2,7 +2,7 @@ import pandas as pd
 from konlpy.tag import Okt
 import re
 
-df = pd.read_csv('./crawling_data/movie_review_onesentence_2018_2022.csv')
+df = pd.read_csv('./crawling_data/reviews_2022.csv')
 print(df.head())
 df.info()
 
@@ -23,12 +23,17 @@ stopwords_list = list(stopwords['stopword'])
 # df.info()
 
 okt = Okt()
-
+count = 0
 cleaned_sentences = []
-for sentence in df.reviews[3:8]:
+for sentence in df.reviews:
+    count += 1
+    if count % 10 ==0:
+        print('.', end='')
+    if count % 100 == 0:
+        print()
     sentence = re.sub('[^가-힣]', '', sentence)
     token = okt.pos(sentence, stem=True)
-    print(token)
+    # print(token)
     df_token = pd.DataFrame(token,  columns=['word', 'class'])
     df_cleaned_token = df_token[(df_token['class']=='Noun') |
                                 (df_token['class']=='Verb') |
@@ -39,13 +44,13 @@ for sentence in df.reviews[3:8]:
             if word not in stopwords_list:
                 words.append(word)
     cleaned_sentence = ' '.join(words)
-    print(cleaned_sentence)
+    # print(cleaned_sentence)
     cleaned_sentences.append(cleaned_sentence)
-# df['cleaned_sentences'] = cleaned_sentences
-# print(df.head())
-# df.info()
-# df.to_csv('./crawling_data/cleaned_review_2018_2022.csv',
-#           index=False)
+df['cleaned_sentences'] = cleaned_sentences
+print(df.head())
+df.info()
+df.to_csv('./crawling_data/cleaned_review_2018_2022.csv',
+          index=False)
 
 
 
