@@ -22,7 +22,7 @@ option.add_argument('--no-sandbox')
 option.add_argument('--disable-dev-shm-usage')
 option.add_argument('disable-gpu')
 driver = webdriver.Chrome('./chromedriver', options=option)
-driver.implicitly_wait(10)
+driver.implicitly_wait(1)
 
 # https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page=1 첫 페이지
 # //*[@id="old_content"]/ul/li[1]/a 영화 제목 1
@@ -41,7 +41,9 @@ driver.implicitly_wait(10)
 movie_page_url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2022&page={}'
 movie_title_xpath = '//*[@id="old_content"]/ul/li[{}]/a'
 review_page_url = 'https://movie.naver.com/movie/bi/mi/review.naver?code=193794&page={}'
-review_tab_xpath = '//*[@id="movieEndTabMenu"]/li[{}]/a/em'
+review_tab_xpath = '//*[@id="movieEndTabMenu"]/li[{}]/a'
+#//*[@id="movieEndTabMenu"]/li[{}]/a/em
+#//*[@id="movieEndTabMenu"]/li[6]/a/em
 review_title_xpath = '//*[@id="reviewTab"]/div/div/ul/li[{}]/a/strong'
 title_xpath = '//*[@id="content"]/div[1]/div[2]/div[1]/h3/a'
 review_xpath = '//*[@id="content"]/div[1]/div[4]/div[1]/div[4]'
@@ -54,21 +56,32 @@ for i in range(1, 14):
             driver.get(url)
             time.sleep(0.2)
             try:
+                print('j :', j)
                 driver.find_element_by_xpath(movie_title_xpath.format(j)).click() # 영화 제목 클릭
                 time.sleep(0.2)
                 for k in range(6, 0, -1):
                     if driver.find_element_by_xpath(review_tab_xpath.format(k)).text == '리뷰':
+                        print(review_tab_xpath.format(k))
+                        review_page_url = driver.find_element_by_xpath(review_tab_xpath.format(k)).get_attribute('href')
+                        print(review_page_url)
                         driver.find_element_by_xpath(review_tab_xpath.format(k)).click() # 리뷰 버튼 클릭
                         time.sleep(0.2)
+
                         break
+
                 for l in range(1, 7):
+                    print('l :', l)
                     try:
-                        driver.get(review_page_url.format(l))
+                        print(review_page_url)
+                        #driver.get(review_page_url + '&page={}'.format(l))
+                        driver.find_element_by_xpath('//*[@id="pagerTagAnchor{}"]'.format(l)).click()
+                        print('debug02')
                         time.sleep(0.2)
                         for k in range(1, 11):
                             try:
                                 driver.find_element_by_xpath(review_title_xpath.format(k)).click() # 리뷰 제목 클릭
                                 time.sleep(0.2)
+                                print('k :', k)
                                 try:
                                     title = driver.find_element_by_xpath(title_xpath).text
                                     title = title.replace(',', ' ')
@@ -92,13 +105,18 @@ for i in range(1, 14):
 
                             except:
                                 print('{}페이지 {}번째 영화 리뷰 {}페이지 {}번째 리뷰 error'.format(i, j, l, k))
+                                break
                     except:
                         print('{}페이지 {}번째 영화 리뷰 {}페이지 error'.format(i, j, l))
+                        #driver.get(url)
+                        break
             except:
                 print('{}페이지 {}번째 영화 error'.format(i, j))
         except:
             print('{}page error'.format(i))
-
+    df = pd.DataFrame({'title':titles, 'reviews':reviews})
+    print(df.tail())
+    df.to_csv('./crawling_data/reviews_{}.csv'.format(2022), index=False)
 
 
 
