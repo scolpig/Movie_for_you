@@ -14,7 +14,7 @@ stopwords = pd.read_csv('./crawling_data/stopwords.csv')
 stopwords_list = list(stopwords['stopword'])
 cleaned_sentences = []
 for review in df.reviews:
-    review = re.sub('[^가-힣]', '', review)
+    review = re.sub('[^가-힣 ]', '', review)
     review_word = review.split(' ')
 
     words = []
@@ -26,6 +26,6 @@ for review in df.reviews:
     cleaned_sentences.append(cleaned_sentence)
 df['cleaned_sentences'] = cleaned_sentences
 df = df[['title', 'cleaned_sentences']]
-df.to_csv('./crawling_data/cleaned_review_2018_2022.csv',
+df.to_csv('./crawling_data/cleaned_review_2022.csv',
           index=False)
 df.info()
