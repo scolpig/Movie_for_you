@@ -16,7 +16,7 @@ rc('font', family=font_name)
 df = pd.read_csv('./crawling_data/datasets/movie_review_2018_2022.csv')
 print(df.head())
 
-words = df.iloc[11, 1]
+words = df.iloc[469, 1]
 print(words)
 
 words = words.split()
@@ -29,7 +29,7 @@ worddict_1 = dict(sorted(worddict_1.items(),
                       reverse=True))
 print(worddict_1)
 
-words = df.iloc[218, 1]
+words = df.iloc[513, 1]
 # print(words)
 
 words = words.split()

@@ -4,7 +4,9 @@ from scipy.io import mmwrite, mmread
 import pickle
 
 df_reviews = pd.read_csv('./crawling_data/datasets/movie_review_2018_2022.csv')
-
+df_reviews.dropna(inplace=True)
+df_reviews.to_csv('./crawling_data/datasets/movie_review_2018_2022.csv',
+                  index=False)
 df_reviews.info()
 
 Tfidf = TfidfVectorizer(sublinear_tf=True)

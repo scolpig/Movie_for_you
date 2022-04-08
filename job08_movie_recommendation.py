@@ -21,10 +21,10 @@ with open('./models/tfidf01.pickle', 'rb') as f:
     Tfidf = pickle.load(f)
 
 # # 영화 제목을 이용
-# movie_idx = df_reviews[df_reviews['title']=='기생충'].index[0]
+# movie_idx = df_reviews[df_reviews['title']=='겨울왕국 2'].index[0]
 # print(movie_idx)
 # 영화 index를 이용
-movie_idx = 218
+movie_idx = 469
 print(df_reviews.iloc[movie_idx, 0])
 cosine_sim = linear_kernel(Tfidf_matrix[movie_idx], Tfidf_matrix)
 recommendation = getRecommendation(cosine_sim)
