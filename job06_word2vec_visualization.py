@@ -11,11 +11,19 @@ font_name = font_manager.FontProperties(
 mpl.rcParams['axes.unicode_minus']=False
 rc('font', family=font_name)
 
+# # !apt -qq -y install fonts-nanum
+# import matplotlib as mpl
+# import matplotlib.font_manager as fm
+# fontpath = '/usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf'
+# font = fm.FontProperties(fname=fontpath, size=9)
+# plt.rc('font', family='NanumBarunGothic')
+# mpl.font_manager._rebuild()
+
 embedding_model = Word2Vec.load('./models/word2vecModel.model')
 print(list(embedding_model.wv.index_to_key))
 print(len(list(embedding_model.wv.index_to_key)))
-key_word = '여름'
-sim_word = embedding_model.wv.most_similar(key_word, topn=10)
+key_word = '아이언맨'
+sim_word = embedding_model.wv.most_similar(key_word, topn=20)
 print(sim_word)
 print(len(sim_word))
 
