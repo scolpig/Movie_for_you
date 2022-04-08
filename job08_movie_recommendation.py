@@ -16,8 +16,8 @@ def getRecommendation(cosine_sim):
     recMovieList = df_reviews.iloc[movieidx]
     return recMovieList.iloc[:, 0]
 
-Tfidf_matrix = mmread('./models/Tfidf_movie_review.mtx').tocsr()
-with open('./models/tfidf.pickle', 'rb') as f:
+Tfidf_matrix = mmread('./models/Tfidf_movie_review01.mtx').tocsr()
+with open('./models/tfidf01.pickle', 'rb') as f:
     Tfidf = pickle.load(f)
 
 # # 영화 제목을 이용
