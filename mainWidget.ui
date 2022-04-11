@@ -10,6 +10,11 @@
     <height>686</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>11</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -40,6 +45,11 @@
      <height>22</height>
     </rect>
    </property>
+   <item>
+    <property name="text">
+     <string>어떤 영화를 좋아하세요?</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="lbl_recommend">
    <property name="geometry">
@@ -57,6 +67,37 @@
    </property>
    <property name="text">
     <string>추천 영화</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="le_keyword">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>120</y>
+     <width>381</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="placeholderText">
+    <string>추천 키워드를 입력하세요.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_recommend">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>120</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>17</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>추천</string>
    </property>
   </widget>
  </widget>
