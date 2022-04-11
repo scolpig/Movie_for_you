@@ -40,6 +40,8 @@ with open('./models/tfidf01.pickle', 'rb') as f:
 #     sentence += [word] * (10 - i)
 #
 # sentence = ' '.join(sentence)
+
+# 문장을 이용
 sentence = '적화통일돼서 배에서 기생충 키우고 싶나? 뭔 북한넘들 미화 영화가 이렇게 많냐. 배우들도 생각이 있으면 이런 영화는 걸러야하는 거 아니냐. 박정희, 전두환 군부 독재 시절을 미화하는 영화에 출연하면 무식해보이 듯이, 이런 북한 미화 영화 출연하는 것도 참으로 정신나간 듯이 보인다. 제목도 강철비가 뭐냐. 김영환 강철서신에서 가져온거냐. 정말 적당히 하자'
 sentence_vec = Tfidf.transform([sentence])
 cosine_sim = linear_kernel(sentence_vec, Tfidf_matrix)
